@@ -1,0 +1,53 @@
+{% extends 'layout.tpl.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="/html5-skin.css">
+<script src="/scripts/core.min.js"></script>
+<script src="/scripts/main_html5.min.js"></script>
+<script src="/scripts/bit_wrapper.min.js"></script>
+<script src="/scripts/osmf_flash.min.js"></script>
+<script src="/scripts/discovery_api.min.js"></script>
+<script src="/html5-skin.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<div class="myoo-player-section">
+  <p class="myoo-player-section__description">再生を一時停止した状態でコメントを投稿できます</p>
+  <div class="myoo-player-container">
+    <div id="container" class="myoo-player"></div>
+  </div>
+  <div id="comment" class="myoo-player-comment"></div>
+</div>
+<script>
+var socket = io.connect('/');
+window.addEventListener('beforeunload', () => {
+  socket.disconnect();
+});
+var comment = document.querySelector('#comment');
+socket.on('comment', function (data) {
+  var div = document.createElement('div');
+  div.innerHTML = '<img class="myoo-player-comment__image" src="' + data.thumbnail.url + '"></img>' +
+    '<span class="myoo-player-comment__text">' + data.comment + '</span>';
+  comment.appendChild(div);
+});
+OO.ready(() => {
+  OO.Player.create(
+    'container',
+    '{{embedCode}}',
+    {
+      pcode: '{{pcode}}',
+      playerBrandingId: '{{playerBrandingId}}',
+      debug: true,
+      skin: {
+        // config contains the configuration setting for player skin. Change this path to your local config when necessary.
+        config: '/skin.json',
+        "inline": {
+          "comment": {
+            "imageWidth": 213,
+            "socket": socket
+          }
+        }
+      }
+    }
+  );
+});
+</script>
+{% endblock %}

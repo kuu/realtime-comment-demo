@@ -10,7 +10,7 @@
 <script src="/html5-skin.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <div class="myoo-player-section">
-  <p class="myoo-player-section__description">再生を一時停止した状態でコメントを投稿できます</p>
+  <p class="myoo-player-section__description">再生を一時停止した状態でコメントを投稿できます</br>他の動画を視聴している人のコメントも表示されます</p>
   <div class="myoo-player-container">
     <div id="container" class="myoo-player"></div>
   </div>
@@ -18,9 +18,6 @@
 </div>
 <script>
 var socket = io.connect('/');
-window.addEventListener('beforeunload', () => {
-  socket.disconnect();
-});
 var comment = document.querySelector('#comment');
 socket.on('comment', function (data) {
   var div = document.createElement('div');
